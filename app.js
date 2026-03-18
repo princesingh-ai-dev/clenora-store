@@ -339,6 +339,7 @@ function showNotification(message, type = 'success') {
             notification.classList.remove('show');
         }, 3000);
     }
+        }
 
     // Load Products
 function loadProducts() {
