@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clenora Store | Kills 99.9% of Germs</title>
+    <meta name="description" content="Kills 99.9% of Germs - Powerful Cleaning Products for Your Home">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header / Navigation -->
+    <header id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-text">Clenora</span>
+                <span class="logo-tag">Home Care</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#products">Products</a>
+                <a href="#about">About</a>
+                <a href="#safety">Safety</a>
+                <a href="#contact">Contact</a>
+            </nav>
+            <div class="nav-actions">
+                <button class="cart-btn" id="cartBtn">
+                    <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="mobile-nav" id="mobileNav">
+            <a href="#home">Home</a>
+            <a href="#products">Products</a>
+            <a href="#about">About</a>
+            <a href="#safety">Safety</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="hero-badge">NEW ARRIVALS</span>
+                <h1>Powerful Cleaning,<br>Long-lasting <span class="highlight">Freshness</span></h1>
+                <p class="hero-subtitle">Kills 99.9% of germs and removes tough stains. Experience the Clenora difference.</p>
+                <div class="hero-buttons">
+                    <a href="#products" class="btn btn-primary">Shop Now</a>
+                    <a href="#about" class="btn btn-outline">Know More</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-num">99.9%</span>
+                        <span class="stat-label">Germ Kill</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-num">10X</span>
+                        <span class="stat-label">Power</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-num">100%</span>
+                        <span class="stat-label">Fresh</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="bottle-display">
+                    <div class="bottle bottle-1"><span class="bottle-label">Toilet</span></div>
+                    <div class="bottle bottle-2"><span class="bottle-label">Hand Wash</span></div>
+                    <div class="bottle bottle-3"><span class="bottle-label">Dish Wash</span></div>
+                    <div class="bottle bottle-4"><span class="bottle-label">Floor</span></div>
+                </div>
+                <div class="leaf-decoration"></div>
+                <div class="lemon-decoration"></div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll to explore</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products">
+        <div class="section-header">
+            <span class="section-badge">OUR PRODUCTS</span>
+            <h2>Shop Clenora <span class="highlight">Collection</span></h2>
+            <p>Powerful cleaning solutions for every corner of your home</p>
+        </div>
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be rendered by JavaScript -->
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="about-content">
+            <div class="about-text">
+                <span class="section-badge">ABOUT US</span>
+                <h2>Keeping Indian Homes <span class="highlight">Clean & Safe</span></h2>
+                <p>Clenora Pvt. Ltd. is a leading home care brand based in Varanasi, Uttar Pradesh. We manufacture high-quality cleaning products that are effective yet safe for your family.</p>
+                <p>Our mission is simple: to provide powerful cleaning solutions that protect your home from germs while being environmentally conscious. Every Clenora product is tested and trusted by thousands of Indian households.</p>
+                <div class="about-features">
+                    <div class="feature">
+                        <div class="feature-icon">&#10004;</div>
+                        <div class="feature-text">
+                            <h4>Made in India</h4>
+                            <p>Manufactured in Varanasi, U.P.</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">&#10004;</div>
+                        <div class="feature-text">
+                            <h4>Quality Tested</h4>
+                            <p>Rigorous quality checks</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">&#10004;</div>
+                        <div class="feature-text">
+                            <h4>Family Safe</h4>
+                            <p>Safe for your loved ones</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image">
+                <div class="about-card">
+                    <div class="about-stat">
+                        <span class="about-num">4+</span>
+                        <span class="about-label">Products</span>
+                    </div>
+                    <div class="about-stat">
+                        <span class="about-num">99.9%</span>
+                        <span class="about-label">Germ Kill</span>
+                    </div>
+                    <div class="about-stat">
+                        <span class="about-num">100%</span>
+                        <span class="about-label">Quality</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Safety Section -->
+    <section id="safety" class="safety">
+        <div class="section-header">
+            <span class="section-badge">USAGE & SAFETY</span>
+            <h2>How to Use <span class="highlight">Clenora Toilet Cleaner</span></h2>
+        </div>
+        <div class="safety-content">
+            <div class="usage-steps">
+                <h3>Directions for Use</h3>
+                <div class="steps">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-info">
+                            <h4>Press & Apply</h4>
+                            <p>Press the cap and apply under the rim of the toilet bowl</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-info">
+                            <h4>Wait 5 Minutes</h4>
+                            <p>Let the cleaner work on tough stains and germs</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-info">
+                            <h4>Brush & Flush</h4>
+                            <p>Brush thoroughly and flush for a clean, fresh toilet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="safety-precautions">
+                <h3>Safety Precautions</h3>
+                <ul class="safety-list">
+                    <li>Contains strong cleaning agents - avoid direct contact with skin and eyes</li>
+                    <li>Keep out of reach of children and pets</li>
+                    <li>Do not mix with other cleaning products</li>
+                    <li>Use in well-ventilated areas</li>
+                    <li>In case of contact with eyes, rinse immediately with water</li>
+                    <li>Wear gloves while using for best protection</li>
+                </ul>
+                <div class="warning-box">
+                    <span class="warning-icon">&#9888;</span>
+                    <span class="warning-text">Do not use on marble or natural stone surfaces</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="section-header">
+            <span class="section-badge">GET IN TOUCH</span>
+            <h2>Contact <span class="highlight">Us</span></h2>
+            <p>Have questions? We'd love to hear from you.</p>
+        </div>
+        <div class="contact-content">
+            <div class="contact-info">
+                <div class="contact-card">
+                    <div class="contact-icon">&#128205;</div>
+                    <h4>Address</h4>
+                    <p>Clenora Pvt. Ltd.<br>Mahimapur, Kolhan<br>Varanasi, Uttar Pradesh<br>India</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">&#128222;</div>
+                    <h4>Customer Care</h4>
+                    <p>+91 XXXXX XXXXX<br>support@clenora.store</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">&#128231;</div>
+                    <h4>Email</h4>
+                    <p>info@clenora.store<br>sales@clenora.store</p>
+                </div>
+            </div>
+            <form class="contact-form" id="contactForm">
+                <div class="form-row">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="tel" placeholder="Phone Number">
+                </div>
+                <input type="email" placeholder="Email Address" required>
+                <textarea placeholder="Your Message" rows="4" required></textarea>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Shopping Cart</h3>
+            <button class="close-cart" id="closeCart">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <p>Your cart is empty</p>
+                <a href="#products" class="btn btn-outline">Browse Products</a>
+            </div>
+        </div>
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cartTotal">&#8377;0</span>
+            </div>
+            <button class="btn btn-primary cart-checkout" id="checkoutBtn">Proceed to Checkout</button>
+        </div>
+    </div>
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Checkout</h3>
+                <button class="close-modal" id="closeCheckout">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="checkoutForm">
+                    <h4>Delivery Details</h4>
+                    <div class="form-row">
+                        <input type="text" id="name" placeholder="Full Name" required>
+                        <input type="tel" id="phone" placeholder="Phone Number" required>
+                    </div>
+                    <input type="email" id="email" placeholder="Email Address" required>
+                    <input type="text" id="address" placeholder="Full Address" required>
+                    <div class="form-row">
+                        <input type="text" id="city" placeholder="City" required>
+                        <input type="text" id="pincode" placeholder="Pincode" pattern="[0-9]{6}" required>
+                    </div>
+                    <h4>Order Summary</h4>
+                    <div id="orderSummary" class="order-summary"></div>
+                    <div class="order-total">
+                        <span>Total Amount</span>
+                        <span id="orderTotal" class="total-amount">&#8377;0</span>
+                    </div>
+                    <div class="payment-methods">
+                        <h4>Payment Method</h4>
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="razorpay" checked>
+                                <span class="payment-logo">UPI / Card / NetBanking</span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="cod">
+                                <span class="payment-logo">Cash on Delivery</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="backToCart">Back to Cart</button>
+                <button class="btn btn-primary" id="placeOrderBtn">Place Order & Pay</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <!-- Order Success Modal -->
+    <div class="modal success-modal" id="successModal">
+        <div class="modal-content success-content">
+            <div class="success-icon">&#10004;</div>
+            <h3>Order Placed Successfully!</h3>
+            <p>Thank you for shopping with Clenora. Your order will be delivered soon.</p>
+            <button class="btn btn-primary" id="continueShopping">Continue Shopping</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="logo">
+                    <span class="logo-text">Clenora</span>
+                    <span class="logo-tag">Home Care</span>
+                </div>
+                <p>Kills 99.9% of germs. Powerful cleaning solutions for every Indian home.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">FB</a>
+                    <a href="#" class="social-link">IG</a>
+                    <a href="#" class="social-link">TW</a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <a href="#home">Home</a>
+                    <a href="#products">Products</a>
+                    <a href="#about">About</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Products</h4>
+                    <a href="#products">Toilet Cleaner</a>
+                    <a href="#products">Hand Wash</a>
+                    <a href="#products">Dish Wash</a>
+                    <a href="#products">Floor Cleaner</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <p>Mahimapur, Kolhan<br>Varanasi, U.P., India</p>
+                    <p>support@clenora.store</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Clenora Pvt. Ltd. All rights reserved.</p>
+            <p>Made in India &#127470;&#127475;</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
