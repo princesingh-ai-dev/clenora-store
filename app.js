@@ -367,7 +367,7 @@ function loadProducts() {
     \`).join('');
 }
 
-}
+
 
 // Cart icon click in header
 document.querySelector('.cart-icon')?.addEventListener('click', openCart);
