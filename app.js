@@ -3,6 +3,56 @@
 // Cart data
 cart = [];
 
+// Product Data
+const products = [
+    {
+        id: 1,
+        name: 'Toilet Cleaner Power Plus 10X',
+        price: 49,
+        image: 'images/toilet-cleaner-10x.jpg',
+        badge: 'NEW',
+        description: 'Powerful cleaning removal. Kills 99.9% germs.',
+        category: 'toilet'
+    },
+    {
+        id: 2,
+        name: 'Hand Wash - Rose',
+        price: 89,
+        image: 'images/handwash-rose.jpg',
+        badge: 'NEW',
+        description: 'Rose & Glycerine formula. Gentle hand protection.',
+        category: 'handwash'
+    },
+    {
+        id: 3,
+        name: 'Dish Wash Liquid - Lemon',
+        price: 69,
+        image: 'images/dishwash-lemon.jpg',
+        badge: 'NEW',
+        description: 'Power of Lemon. Cuts tough grease.',
+        category: 'dishwash'
+    },
+    {
+        id: 4,
+        name: 'Phenyl - Powerful Disinfectant',
+        price: 59,
+        image: 'images/phenyl.jpg',
+        badge: 'NEW',
+        description: '99.9% Germ Kill. Pine fresh fragrance.',
+        category: 'disinfectant'
+    },
+    {
+        id: 5,
+        name: 'Floor Cleaner - Lemon Fresh',
+        price: 79,
+        image: 'images/floor-cleaner-lemon.jpg',
+        badge: 'NEW',
+        description: 'Kills 99.9% of germs. Lemon fresh.',
+        category: 'floor'
+    }
+];
+
+
 // DOM Elements
 const cartOverlay = document.querySelector('.cart-overlay');
 const cartSidebar = document.querySelector('.cart-sidebar');
@@ -15,6 +65,7 @@ const checkoutForm = document.querySelector('.checkout-form');
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     loadCart();
+            loadProducts();
     updateCartDisplay();
     setupEventListeners();
     setupSmoothScroll();
@@ -288,6 +339,33 @@ function showNotification(message, type = 'success') {
             notification.classList.remove('show');
         }, 3000);
     }
+
+    // Load Products
+function loadProducts() {
+    const productsGrid = document.getElementById('productsGrid');
+    if (!productsGrid) return;
+    
+    productsGrid.innerHTML = products.map(product => \`
+        <div class="product-card">
+            <div class="product-image-container">
+                ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
+                <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'><rect fill=\'rgba(0,0,0,0.1)\' width=\'200\' height=\'200\'/><text x=\'100\' y=\'110\' font-family=\'sans-serif\' font-size=\'14\' text-anchor=\'middle\' fill=\'rgba(0,0,0,0.3)\'>${product.name}</text></svg>'">
+            </div>
+            <div class="product-info">
+                <span class="product-category">${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</span>
+                <h3 class="product-title">${product.name}</h3>
+                <p class="product-desc">${product.description}</p>
+                <div class="product-price">
+                    <span class="price-amount">Rs ${product.price}</span>
+                    <button class="add-to-cart-btn" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-image="${product.image}">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    \`).join('');
+}
+
 }
 
 // Cart icon click in header
