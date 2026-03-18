@@ -1242,4 +1242,60 @@ ul { list-style: none; }
             .checkout-form {
                 padding: 24px;
             }
+
+            /* Additional Product Styles */
+.product-image-container {
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+
+/* Alias for .product-name */
+.product-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+/* Alias for .product-price-row */
+.product-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Alias for .product-price */
+.price-amount {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-green);
+}
+
+/* Disinfectant bottle color */
+.product-bottle.disinfectant {
+    background: linear-gradient(180deg, #9c27b0 0%, #7b1fa2 100%);
+}
+
+/* Disinfectant category badge */
+.disinfectant {
+    background: linear-gradient(180deg, #9c27b0 0%, #7b1fa2 100%);
+}
+
+/* Handle image fallback gracefully */
+.product-image {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Product grid min-height when empty */
+.products-grid {
+    min-height: 200px;
+}
+
         }
