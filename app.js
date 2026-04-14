@@ -1,4 +1,4 @@
-// Clenora Store - E-commerce JavaScript
+// Clenexo Store - E-commerce JavaScript
 
 // Cart data
 cart = [];
@@ -191,11 +191,11 @@ function updateQuantity(id, change) {
 }
 
 function saveCart() {
-    localStorage.setItem('clenoraCart', JSON.stringify(cart));
+    localStorage.setItem('clenexoCart', JSON.stringify(cart));
 }
 
 function loadCart() {
-    const saved = localStorage.getItem('clenoraCart');
+    const saved = localStorage.getItem('clenexoCart');
     if (saved) {
         cart = JSON.parse(saved);
     }

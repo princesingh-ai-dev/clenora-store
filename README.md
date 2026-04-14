@@ -1,1 +1,1 @@
-# clenora-store
+# clenexo-store
