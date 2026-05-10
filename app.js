@@ -1,5 +1,24 @@
 // Clenora Store - E-commerce JavaScript
 
+// Security Helper
+function escapeHTML(str) {
+    if (typeof str !== 'string') return str;
+    return str.replace(/[&<>'"]/g,
+        tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag] || tag)
+    );
+}
+
+function escapeJSContext(str) {
+    if (typeof str !== 'string') return str;
+    return encodeURIComponent(str);
+}
+
 // Cart data
 cart = [];
 
@@ -221,17 +240,17 @@ function updateCartDisplay() {
         } else {
             cartItemsContainer.innerHTML = cart.map(item => `
                 <div class="cart-item">
-                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}" class="cart-item-image">
                     <div class="cart-item-details">
-                        <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">Rs ${item.price.toLocaleString()}</div>
+                        <div class="cart-item-name">${escapeHTML(item.name)}</div>
+                        <div class="cart-item-price">Rs ${Number(item.price).toLocaleString()}</div>
                         <div class="quantity-controls">
-                            <button type="button" class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
-                            <span>${item.quantity}</span>
-                            <button type="button" class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+                            <button type="button" class="quantity-btn" onclick="updateQuantity(decodeURIComponent('${escapeJSContext(String(item.id))}'), -1)">-</button>
+                            <span>${Number(item.quantity)}</span>
+                            <button type="button" class="quantity-btn" onclick="updateQuantity(decodeURIComponent('${escapeJSContext(String(item.id))}'), 1)">+</button>
                         </div>
                     </div>
-                    <button type="button" class="remove-item" onclick="removeFromCart('${item.id}')">
+                    <button type="button" class="remove-item" onclick="removeFromCart(decodeURIComponent('${escapeJSContext(String(item.id))}'))">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -277,8 +296,8 @@ function renderOrderSummary() {
 
     summaryContainer.innerHTML = cart.map(item => `
         <div class="order-item">
-            <span>${item.name} x${item.quantity}</span>
-            <span>Rs ${(item.price * item.quantity).toLocaleString()}</span>
+            <span>${escapeHTML(item.name)} x${Number(item.quantity)}</span>
+            <span>Rs ${(Number(item.price) * Number(item.quantity)).toLocaleString()}</span>
         </div>
     `).join('') + `
         <div class="order-total">
@@ -346,11 +365,11 @@ function loadProducts() {
     const productsGrid = document.getElementById('productsGrid');
     if (!productsGrid) return;
     
-    productsGrid.innerHTML = products.map(product => \`
+    productsGrid.innerHTML = products.map(product => `
         <div class="product-card">
             <div class="product-image-container">
                 ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
-                <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'><rect fill=\'rgba(0,0,0,0.1)\' width=\'200\' height=\'200\'/><text x=\'100\' y=\'110\' font-family=\'sans-serif\' font-size=\'14\' text-anchor=\'middle\' fill=\'rgba(0,0,0,0.3)\'>${product.name}</text></svg>'">
+                <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 200 200\\'><rect fill=\\'rgba(0,0,0,0.1)\\' width=\\'200\\' height=\\'200\\'/><text x=\\'100\\' y=\\'110\\' font-family=\\'sans-serif\\' font-size=\\'14\\' text-anchor=\\'middle\\' fill=\\'rgba(0,0,0,0.3)\\'>${product.name}</text></svg>'">
             </div>
             <div class="product-info">
                 <span class="product-category">${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</span>
@@ -364,7 +383,7 @@ function loadProducts() {
                 </div>
             </div>
         </div>
-    \`).join('');
+    `).join('');
 }
 
 
