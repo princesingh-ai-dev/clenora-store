@@ -1,5 +1,20 @@
 // Clenora Store - E-commerce JavaScript
 
+// Security Utilities
+function escapeHTML(str) {
+    if (typeof str !== 'string') return str;
+    return str.replace(/[&<>"']/g, function(match) {
+        const escapeMap = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        };
+        return escapeMap[match];
+    });
+}
+
 // Cart data
 cart = [];
 
@@ -118,6 +133,25 @@ function setupEventListeners() {
         checkoutForm.addEventListener('submit', handleCheckout);
     }
 
+    // Cart Items Event Delegation
+    if (cartItemsContainer) {
+        cartItemsContainer.addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+
+            const id = btn.getAttribute('data-id');
+            if (!id) return;
+
+            if (btn.classList.contains('quantity-decrease')) {
+                updateQuantity(id, -1);
+            } else if (btn.classList.contains('quantity-increase')) {
+                updateQuantity(id, 1);
+            } else if (btn.classList.contains('remove-item')) {
+                removeFromCart(id);
+            }
+        });
+    }
+
     // Smooth scroll for nav links
     document.querySelectorAll('.nav-links a, .hero-btn').forEach(link => {
         link.addEventListener('click', (e) => {
@@ -219,23 +253,27 @@ function updateCartDisplay() {
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
         } else {
-            cartItemsContainer.innerHTML = cart.map(item => `
+            cartItemsContainer.innerHTML = cart.map(item => {
+                const safeName = escapeHTML(item.name);
+                const safeImage = escapeHTML(item.image);
+                const safeId = escapeHTML(String(item.id));
+                return `
                 <div class="cart-item">
-                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <img src="${safeImage}" alt="${safeName}" class="cart-item-image">
                     <div class="cart-item-details">
-                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-name">${safeName}</div>
                         <div class="cart-item-price">Rs ${item.price.toLocaleString()}</div>
                         <div class="quantity-controls">
-                            <button type="button" class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
+                            <button type="button" class="quantity-btn quantity-decrease" data-id="${safeId}">-</button>
                             <span>${item.quantity}</span>
-                            <button type="button" class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+                            <button type="button" class="quantity-btn quantity-increase" data-id="${safeId}">+</button>
                         </div>
                     </div>
-                    <button type="button" class="remove-item" onclick="removeFromCart('${item.id}')">
+                    <button type="button" class="remove-item" data-id="${safeId}">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
-            `).join('');
+            `}).join('');
         }
     }
 
@@ -275,12 +313,14 @@ function renderOrderSummary() {
     const summaryContainer = document.getElementById('orderSummary');
     if (!summaryContainer || cart.length === 0) return;
 
-    summaryContainer.innerHTML = cart.map(item => `
+    summaryContainer.innerHTML = cart.map(item => {
+        const safeName = escapeHTML(item.name);
+        return `
         <div class="order-item">
-            <span>${item.name} x${item.quantity}</span>
+            <span>${safeName} x${item.quantity}</span>
             <span>Rs ${(item.price * item.quantity).toLocaleString()}</span>
         </div>
-    `).join('') + `
+    `}).join('') + `
         <div class="order-total">
             <span>Total</span>
             <span class="amount">Rs ${getCartTotal().toLocaleString()}</span>
@@ -346,11 +386,11 @@ function loadProducts() {
     const productsGrid = document.getElementById('productsGrid');
     if (!productsGrid) return;
     
-    productsGrid.innerHTML = products.map(product => \`
+    productsGrid.innerHTML = products.map(product => `
         <div class="product-card">
             <div class="product-image-container">
                 ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
-                <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'><rect fill=\'rgba(0,0,0,0.1)\' width=\'200\' height=\'200\'/><text x=\'100\' y=\'110\' font-family=\'sans-serif\' font-size=\'14\' text-anchor=\'middle\' fill=\'rgba(0,0,0,0.3)\'>${product.name}</text></svg>'">
+                <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 200 200\\'><rect fill=\\'rgba(0,0,0,0.1)\\' width=\\'200\\' height=\\'200\\'/><text x=\\'100\\' y=\\'110\\' font-family=\\'sans-serif\\' font-size=\\'14\\' text-anchor=\\'middle\\' fill=\\'rgba(0,0,0,0.3)\\'>${product.name}</text></svg>'">
             </div>
             <div class="product-info">
                 <span class="product-category">${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</span>
@@ -364,7 +404,7 @@ function loadProducts() {
                 </div>
             </div>
         </div>
-    \`).join('');
+    `).join('');
 }
 
 
