@@ -1,0 +1,6 @@
+## 2025-02-28 - DOM-based XSS via localStorage and Inline Event Handlers
+**Vulnerability:** Untrusted user input from `localStorage` (`clenoraCart`) was being injected directly into the DOM using `innerHTML` without sanitization. Furthermore, sanitized variables cannot safely be passed into inline HTML event handlers (e.g., `onclick="..."`) because the browser unescapes HTML entities prior to executing the JavaScript. This combination allowed for DOM-based Cross-Site Scripting (XSS).
+**Learning:** Even internal storage mechanisms like `localStorage` must be treated as untrusted data sources, as other scripts on the same origin (or an attacker with temporary physical access) can modify them. Furthermore, attempting to use `escapeHTML` inside `onclick` attributes is futile because the browser unescapes the attributes before JS evaluation.
+**Prevention:**
+1. Always escape HTML entities (`&`, `<`, `>`, `"`, `'`) before using `innerHTML` with data from `localStorage`, URLs, or APIs.
+2. Avoid using inline event handlers (`onclick="..."`). Use event listeners (`addEventListener`) or event delegation (listening on a parent element and checking the target) with `data-*` attributes.

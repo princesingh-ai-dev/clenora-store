@@ -72,6 +72,17 @@ document.addEventListener('DOMContentLoaded', () => {
     setupMobileMenu();
 });
 
+// Security Utility
+function escapeHTML(str) {
+    // Explicitly cast to string to prevent array bypass attacks
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 // Event Listeners
 function setupEventListeners() {
     // Add to cart buttons
@@ -94,6 +105,32 @@ function setupEventListeners() {
     // Cart overlay click
     if (cartOverlay) {
         cartOverlay.addEventListener('click', closeCart);
+    }
+
+    // Cart items delegation
+    if (cartItemsContainer) {
+        cartItemsContainer.addEventListener('click', (e) => {
+            const decreaseBtn = e.target.closest('.decrease-qty');
+            if (decreaseBtn) {
+                const id = decreaseBtn.getAttribute('data-id');
+                updateQuantity(id, -1);
+                return;
+            }
+
+            const increaseBtn = e.target.closest('.increase-qty');
+            if (increaseBtn) {
+                const id = increaseBtn.getAttribute('data-id');
+                updateQuantity(id, 1);
+                return;
+            }
+
+            const removeBtn = e.target.closest('.remove-item-btn');
+            if (removeBtn) {
+                const id = removeBtn.getAttribute('data-id');
+                removeFromCart(id);
+                return;
+            }
+        });
     }
 
     // Checkout button
@@ -221,17 +258,17 @@ function updateCartDisplay() {
         } else {
             cartItemsContainer.innerHTML = cart.map(item => `
                 <div class="cart-item">
-                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}" class="cart-item-image">
                     <div class="cart-item-details">
-                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-name">${escapeHTML(item.name)}</div>
                         <div class="cart-item-price">Rs ${item.price.toLocaleString()}</div>
                         <div class="quantity-controls">
-                            <button type="button" class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
+                            <button type="button" class="quantity-btn decrease-qty" data-id="${escapeHTML(String(item.id))}">-</button>
                             <span>${item.quantity}</span>
-                            <button type="button" class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+                            <button type="button" class="quantity-btn increase-qty" data-id="${escapeHTML(String(item.id))}">+</button>
                         </div>
                     </div>
-                    <button type="button" class="remove-item" onclick="removeFromCart('${item.id}')">
+                    <button type="button" class="remove-item remove-item-btn" data-id="${escapeHTML(String(item.id))}">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -277,7 +314,7 @@ function renderOrderSummary() {
 
     summaryContainer.innerHTML = cart.map(item => `
         <div class="order-item">
-            <span>${item.name} x${item.quantity}</span>
+            <span>${escapeHTML(item.name)} x${item.quantity}</span>
             <span>Rs ${(item.price * item.quantity).toLocaleString()}</span>
         </div>
     `).join('') + `
@@ -346,7 +383,7 @@ function loadProducts() {
     const productsGrid = document.getElementById('productsGrid');
     if (!productsGrid) return;
     
-    productsGrid.innerHTML = products.map(product => \`
+    productsGrid.innerHTML = products.map(product => `
         <div class="product-card">
             <div class="product-image-container">
                 ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
@@ -364,7 +401,7 @@ function loadProducts() {
                 </div>
             </div>
         </div>
-    \`).join('');
+    `).join('');
 }
 
 
