@@ -1,5 +1,15 @@
 // Clenora Store - E-commerce JavaScript
 
+// Security utility: Escape HTML to prevent XSS
+function escapeHTML(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 // Cart data
 cart = [];
 
@@ -90,6 +100,26 @@ function setupEventListeners() {
     document.querySelectorAll('.close-cart').forEach(btn => {
         btn.addEventListener('click', closeCart);
     });
+
+    // Cart items event delegation (quantity and remove)
+    if (cartItemsContainer) {
+        cartItemsContainer.addEventListener('click', (e) => {
+            const target = e.target;
+            const btn = target.closest('button');
+            if (!btn) return;
+
+            const id = btn.getAttribute('data-id');
+            if (!id) return;
+
+            if (btn.classList.contains('decrease-qty')) {
+                updateQuantity(id, -1);
+            } else if (btn.classList.contains('increase-qty')) {
+                updateQuantity(id, 1);
+            } else if (btn.classList.contains('remove-btn')) {
+                removeFromCart(id);
+            }
+        });
+    }
 
     // Cart overlay click
     if (cartOverlay) {
@@ -221,17 +251,17 @@ function updateCartDisplay() {
         } else {
             cartItemsContainer.innerHTML = cart.map(item => `
                 <div class="cart-item">
-                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}" class="cart-item-image">
                     <div class="cart-item-details">
-                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-name">${escapeHTML(item.name)}</div>
                         <div class="cart-item-price">Rs ${item.price.toLocaleString()}</div>
                         <div class="quantity-controls">
-                            <button type="button" class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
+                            <button type="button" class="quantity-btn decrease-qty" data-id="${escapeHTML(item.id)}">-</button>
                             <span>${item.quantity}</span>
-                            <button type="button" class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+                            <button type="button" class="quantity-btn increase-qty" data-id="${escapeHTML(item.id)}">+</button>
                         </div>
                     </div>
-                    <button type="button" class="remove-item" onclick="removeFromCart('${item.id}')">
+                    <button type="button" class="remove-item remove-btn" data-id="${escapeHTML(item.id)}">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -277,7 +307,7 @@ function renderOrderSummary() {
 
     summaryContainer.innerHTML = cart.map(item => `
         <div class="order-item">
-            <span>${item.name} x${item.quantity}</span>
+            <span>${escapeHTML(item.name)} x${item.quantity}</span>
             <span>Rs ${(item.price * item.quantity).toLocaleString()}</span>
         </div>
     `).join('') + `
@@ -346,7 +376,7 @@ function loadProducts() {
     const productsGrid = document.getElementById('productsGrid');
     if (!productsGrid) return;
     
-    productsGrid.innerHTML = products.map(product => \`
+    productsGrid.innerHTML = products.map(product => `
         <div class="product-card">
             <div class="product-image-container">
                 ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
@@ -364,7 +394,7 @@ function loadProducts() {
                 </div>
             </div>
         </div>
-    \`).join('');
+    `).join('');
 }
 
 
