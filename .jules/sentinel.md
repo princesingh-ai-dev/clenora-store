@@ -1,0 +1,9 @@
+## 2024-05-14 - Fix CRITICAL DOM XSS in Cart Display
+**Vulnerability:** DOM-based Cross-Site Scripting (XSS) via `localStorage`. The application was reading user-controlled shopping cart data (`clenoraCart` from `localStorage`) and rendering fields like `item.name`, `item.image`, and `item.id` directly into the DOM using `innerHTML` in `updateCartDisplay` and `renderOrderSummary`. Additionally, unsanitized values were passed to inline event handlers (`onclick="updateQuantity('${item.id}')"`), enabling potential payload execution escaping.
+
+**Learning:** Data persisted in `localStorage` should be treated as untrusted user input, as it can be manipulated by malicious scripts, extensions, or cross-domain injection vectors if misconfigured. When creating custom sanitization functions like `escapeHTML`, explicitly casting inputs via `String(str)` is critical. Otherwise, an attacker could supply an array payload (e.g., `['<script>alert(1)</script>']`), which JavaScript evaluates as `typeof array === 'object'`, bypassing the `.replace()` string method constraints and enabling XSS. Also, dynamically constructed inline HTML event handlers (like `onclick="..."`) inherently fail against DOM XSS, because browsers unescape HTML entities before JavaScript evaluates the attribute logic.
+
+**Prevention:**
+1. Always parse numbers strictly (`Number(value)`).
+2. Use strict string typing and `String(value).replace()` when establishing HTML entity encoding utilities.
+3. Avoid inline `onclick` event bindings when templating variables; instead, use safe data attributes (`data-id="..."`) alongside semantic classes, bounded by a generic event delegation listener bound securely on the parent container.
