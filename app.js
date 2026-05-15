@@ -118,6 +118,25 @@ function setupEventListeners() {
         checkoutForm.addEventListener('submit', handleCheckout);
     }
 
+    // Cart Items Container Event Delegation
+    if (cartItemsContainer) {
+        cartItemsContainer.addEventListener('click', (e) => {
+            const removeBtn = e.target.closest('.remove-item-btn');
+            if (removeBtn) {
+                removeFromCart(removeBtn.getAttribute('data-id'));
+                return;
+            }
+
+            const quantityBtn = e.target.closest('.change-quantity');
+            if (quantityBtn) {
+                const id = quantityBtn.getAttribute('data-id');
+                const change = parseInt(quantityBtn.getAttribute('data-change'), 10);
+                updateQuantity(id, change);
+                return;
+            }
+        });
+    }
+
     // Smooth scroll for nav links
     document.querySelectorAll('.nav-links a, .hero-btn').forEach(link => {
         link.addEventListener('click', (e) => {
@@ -159,7 +178,7 @@ function setupMobileMenu() {
 
 // Cart Functions
 function addToCart(id, name, price, image) {
-    const existingItem = cart.find(item => item.id === id);
+    const existingItem = cart.find(item => String(item.id) === String(id));
     if (existingItem) {
         existingItem.quantity++;
     } else {
@@ -172,13 +191,13 @@ function addToCart(id, name, price, image) {
 }
 
 function removeFromCart(id) {
-    cart = cart.filter(item => item.id !== id);
+    cart = cart.filter(item => String(item.id) !== String(id));
     saveCart();
     updateCartDisplay();
 }
 
 function updateQuantity(id, change) {
-    const item = cart.find(item => item.id === id);
+    const item = cart.find(item => String(item.id) === String(id));
     if (item) {
         item.quantity += change;
         if (item.quantity <= 0) {
@@ -209,6 +228,16 @@ function getCartCount() {
     return cart.reduce((count, item) => count + item.quantity, 0);
 }
 
+// HTML Sanitization
+function escapeHTML(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 // Update cart display
 function updateCartDisplay() {
     // Update badge count
@@ -221,17 +250,17 @@ function updateCartDisplay() {
         } else {
             cartItemsContainer.innerHTML = cart.map(item => `
                 <div class="cart-item">
-                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}" class="cart-item-image">
                     <div class="cart-item-details">
-                        <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">Rs ${item.price.toLocaleString()}</div>
+                        <div class="cart-item-name">${escapeHTML(item.name)}</div>
+                        <div class="cart-item-price">Rs ${escapeHTML(item.price.toLocaleString())}</div>
                         <div class="quantity-controls">
-                            <button type="button" class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
-                            <span>${item.quantity}</span>
-                            <button type="button" class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+                            <button type="button" class="quantity-btn change-quantity" data-id="${escapeHTML(item.id)}" data-change="-1">-</button>
+                            <span>${escapeHTML(item.quantity)}</span>
+                            <button type="button" class="quantity-btn change-quantity" data-id="${escapeHTML(item.id)}" data-change="1">+</button>
                         </div>
                     </div>
-                    <button type="button" class="remove-item" onclick="removeFromCart('${item.id}')">
+                    <button type="button" class="remove-item remove-item-btn" data-id="${escapeHTML(item.id)}">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -277,8 +306,8 @@ function renderOrderSummary() {
 
     summaryContainer.innerHTML = cart.map(item => `
         <div class="order-item">
-            <span>${item.name} x${item.quantity}</span>
-            <span>Rs ${(item.price * item.quantity).toLocaleString()}</span>
+            <span>${escapeHTML(item.name)} x${escapeHTML(item.quantity)}</span>
+            <span>Rs ${escapeHTML((item.price * item.quantity).toLocaleString())}</span>
         </div>
     `).join('') + `
         <div class="order-total">
@@ -346,11 +375,11 @@ function loadProducts() {
     const productsGrid = document.getElementById('productsGrid');
     if (!productsGrid) return;
     
-    productsGrid.innerHTML = products.map(product => \`
+    productsGrid.innerHTML = products.map(product => `
         <div class="product-card">
             <div class="product-image-container">
                 ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
-                <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'><rect fill=\'rgba(0,0,0,0.1)\' width=\'200\' height=\'200\'/><text x=\'100\' y=\'110\' font-family=\'sans-serif\' font-size=\'14\' text-anchor=\'middle\' fill=\'rgba(0,0,0,0.3)\'>${product.name}</text></svg>'">
+                <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 200 200\\'><rect fill=\\'rgba(0,0,0,0.1)\\' width=\\'200\\' height=\\'200\\'/><text x=\\'100\\' y=\\'110\\' font-family=\\'sans-serif\\' font-size=\\'14\\' text-anchor=\\'middle\\' fill=\\'rgba(0,0,0,0.3)\\'>${product.name}</text></svg>'">
             </div>
             <div class="product-info">
                 <span class="product-category">${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</span>
@@ -364,7 +393,7 @@ function loadProducts() {
                 </div>
             </div>
         </div>
-    \`).join('');
+    `).join('');
 }
 
 
