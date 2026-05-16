@@ -1,5 +1,15 @@
 // Clenora Store - E-commerce JavaScript
 
+// Helper to prevent XSS. Explicitly casts to string to prevent array bypass attacks.
+function escapeHTML(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 // Cart data
 cart = [];
 
@@ -96,6 +106,26 @@ function setupEventListeners() {
         cartOverlay.addEventListener('click', closeCart);
     }
 
+    // Cart items delegation
+    if (cartItemsContainer) {
+        cartItemsContainer.addEventListener('click', (e) => {
+            const updateBtn = e.target.closest('.update-qty-btn');
+            if (updateBtn) {
+                const id = updateBtn.getAttribute('data-id');
+                const change = parseInt(updateBtn.getAttribute('data-change'), 10);
+                updateQuantity(id, change);
+                return;
+            }
+
+            const removeBtn = e.target.closest('.remove-item-btn');
+            if (removeBtn) {
+                const id = removeBtn.getAttribute('data-id');
+                removeFromCart(id);
+                return;
+            }
+        });
+    }
+
     // Checkout button
     const checkoutBtn = document.querySelector('.cart-checkout-btn');
     if (checkoutBtn) {
@@ -159,7 +189,7 @@ function setupMobileMenu() {
 
 // Cart Functions
 function addToCart(id, name, price, image) {
-    const existingItem = cart.find(item => item.id === id);
+    const existingItem = cart.find(item => String(item.id) === String(id));
     if (existingItem) {
         existingItem.quantity++;
     } else {
@@ -172,13 +202,13 @@ function addToCart(id, name, price, image) {
 }
 
 function removeFromCart(id) {
-    cart = cart.filter(item => item.id !== id);
+    cart = cart.filter(item => String(item.id) !== String(id));
     saveCart();
     updateCartDisplay();
 }
 
 function updateQuantity(id, change) {
-    const item = cart.find(item => item.id === id);
+    const item = cart.find(item => String(item.id) === String(id));
     if (item) {
         item.quantity += change;
         if (item.quantity <= 0) {
@@ -221,17 +251,17 @@ function updateCartDisplay() {
         } else {
             cartItemsContainer.innerHTML = cart.map(item => `
                 <div class="cart-item">
-                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}" class="cart-item-image">
                     <div class="cart-item-details">
-                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-name">${escapeHTML(item.name)}</div>
                         <div class="cart-item-price">Rs ${item.price.toLocaleString()}</div>
                         <div class="quantity-controls">
-                            <button type="button" class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
-                            <span>${item.quantity}</span>
-                            <button type="button" class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+                            <button type="button" class="quantity-btn update-qty-btn" data-id="${escapeHTML(item.id)}" data-change="-1">-</button>
+                            <span>${escapeHTML(item.quantity)}</span>
+                            <button type="button" class="quantity-btn update-qty-btn" data-id="${escapeHTML(item.id)}" data-change="1">+</button>
                         </div>
                     </div>
-                    <button type="button" class="remove-item" onclick="removeFromCart('${item.id}')">
+                    <button type="button" class="remove-item remove-item-btn" data-id="${escapeHTML(item.id)}">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -277,7 +307,7 @@ function renderOrderSummary() {
 
     summaryContainer.innerHTML = cart.map(item => `
         <div class="order-item">
-            <span>${item.name} x${item.quantity}</span>
+            <span>${escapeHTML(item.name)} x${escapeHTML(item.quantity)}</span>
             <span>Rs ${(item.price * item.quantity).toLocaleString()}</span>
         </div>
     `).join('') + `
@@ -346,11 +376,11 @@ function loadProducts() {
     const productsGrid = document.getElementById('productsGrid');
     if (!productsGrid) return;
     
-    productsGrid.innerHTML = products.map(product => \`
+    productsGrid.innerHTML = products.map(product => `
         <div class="product-card">
             <div class="product-image-container">
                 ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
-                <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'><rect fill=\'rgba(0,0,0,0.1)\' width=\'200\' height=\'200\'/><text x=\'100\' y=\'110\' font-family=\'sans-serif\' font-size=\'14\' text-anchor=\'middle\' fill=\'rgba(0,0,0,0.3)\'>${product.name}</text></svg>'">
+                <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 200 200\\'><rect fill=\\'rgba(0,0,0,0.1)\\' width=\\'200\\' height=\\'200\\'/><text x=\\'100\\' y=\\'110\\' font-family=\\'sans-serif\\' font-size=\\'14\\' text-anchor=\\'middle\\' fill=\\'rgba(0,0,0,0.3)\\'>${product.name}</text></svg>'">
             </div>
             <div class="product-info">
                 <span class="product-category">${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</span>
@@ -364,7 +394,7 @@ function loadProducts() {
                 </div>
             </div>
         </div>
-    \`).join('');
+    `).join('');
 }
 
 
